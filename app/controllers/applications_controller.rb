@@ -5,12 +5,10 @@ class ApplicationsController < ApplicationController
   def index
     @applications = Application.all
 
-    render json: @applications
   end
 
   # GET /applications/1
   def show
-    render_json   
   end
 
   # POST /applications
@@ -18,19 +16,20 @@ class ApplicationsController < ApplicationController
     @application = Application.new(application_params)
 
     if @application.save
-      render_json
+      @application
+      # render_json
       # render json: @application, status: :created, location: @application
     else
-      render json: @application.errors, status: :unprocessable_entity
+      render json: @application.errors, status: 400
     end
   end
 
   # PATCH/PUT /applications/1
   def update
     if @application.update(application_params)
-      render_json
+      @application
     else
-      render json: @application.errors, status: :unprocessable_entity
+      render json: @application.errors, status: 400
     end
   end
 
@@ -45,13 +44,10 @@ class ApplicationsController < ApplicationController
       @application =  Application.find_by(application_token: params[:application_token])
     end
 
-    # render json 
-    def render_json
-      render json: @application, each_serializer: ActiveModel::Serializer::ApplicationSerializer, key_transform: :underscore 
-    end
+   
     # Only allow a trusted parameter "white list" through.
     def application_params
-      params.require(:application).permit(:name, :token, :chats_count)
+      params.require(:application).permit(:name)
 
     end
 end
