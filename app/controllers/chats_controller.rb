@@ -17,11 +17,7 @@ class ChatsController < ApplicationController
   def create      
     @chat = Chat.new
     @chat.application_id = @application.id
-    if @chat.save
-      @chat
-    else
-      render json: @chat.errors, status: 400
-    end
+    save_to_file
   end
 
   # PATCH/PUT /chats/1
@@ -41,6 +37,41 @@ class ChatsController < ApplicationController
   end
 
   private
+  def save_to_file
+      
+    File.open("temp.json", "r+") do |f|
+      job_objects = File.read("temp.json")
+      if job_objects.empty?
+        prev = {counter: 0, jobs: []}
+        prev[:counter] = prev[:counter] + 1
+        prev[:jobs] <<
+        {
+          "job_#{prev[:counter]}":{
+            'job_type': 'chat',
+            'status': 'pending', 
+            'job_args': {
+              'application_id': @chat.application_id,
+            }
+          }
+        }
+      else
+        prev = JSON.parse(job_objects) 
+        prev["counter"] = prev["counter"] + 1
+        prev["jobs"] <<
+        {
+          "job_#{prev['counter']}":{
+            'job_type': 'chat',
+            'status': 'pending', 
+            'job_args': {
+              'application_id': @chat.application_id,
+            }
+          }
+        }
+      end
+      f.write(prev.to_json)
+    end
+    SavingRecordJob.perform_later
+  end
     # Use callbacks to share common setup or constraints between actions.
     def set_chat
       @chat = Chat.where("number = ? and application_id = ?", params[:chat_number], @application.id).first
