@@ -14,7 +14,10 @@ Rails.application.routes.draw do
       post "application" , to: "applications#create"
 
     end
+    
   end
+  get 'search', to: 'search#search'
+
   # resources :chats
   # get "application",  to: "api/v1/applications#show"
   # patch "application" , to: "api/v1/applications#update"

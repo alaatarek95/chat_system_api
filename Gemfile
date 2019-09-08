@@ -37,6 +37,11 @@ gem 'pry-nav'
 
 gem 'sidekiq'
 
+# elastic search
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
+gem 'elasticsearch-extensions', '~> 0.0.26'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

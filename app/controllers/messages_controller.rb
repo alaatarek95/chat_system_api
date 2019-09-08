@@ -84,7 +84,6 @@ class MessagesController < ApplicationController
         end
         f.write(prev.to_json)
       end
-      f.close
       SavingRecordJob.perform_later
     end
     # Use callbacks to share common setup or constraints between actions.

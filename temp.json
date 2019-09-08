@@ -1,1 +1,1 @@
-{"counter":2,"jobs":[{"job_2":{"job_type":"chat","status":"pending","job_args":{"application_id":1}}}]}
+{"counter":4,"jobs":[{"job_2":{"job_type":"chat","status":"pending","job_args":{"application_id":1}}},{"job_3":{"job_type":"message","status":"pending","job_args":{"chat_id":2,"body":"hi I am alaa"}}},{"job_4":{"job_type":"message","status":"pending","job_args":{"chat_id":2,"body":"hi I am alaa"}}}]}
