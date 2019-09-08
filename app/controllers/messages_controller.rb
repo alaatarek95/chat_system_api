@@ -6,27 +6,25 @@ class MessagesController < ApplicationController
   def index
     @messages = Message.all
 
-    render json: @messages
   end
 
   # GET /messages/1
   def show
-    render json: @message
   end
 
   # POST /messages
   def create
-    @message = Message.new
-    @message.chat_id = @chat.id
-    @message.body = message_params[:body]
     
+    binding.pry
+    
+    @message = Message.new(@chat)    
     save_to_file
   end
 
   # PATCH/PUT /messages/1
   def update
     if @message.update(message_params)
-      render json: @message
+      @message
     else
       render json: @message.errors, status: :unprocessable_entity
     end
@@ -39,13 +37,12 @@ class MessagesController < ApplicationController
 
   private
     def set_chat
-        
-      if params[:action] == "create" || params[:action] == "update"
-      
-        @chat = Chat.find_by(number: message_params[:chat_number])     
+      if params[:action] == "create" || params[:action] == "update"      
+        @application = Application.find_by(application_token: message_params[:application_token])
+        @chat = Chat.where(application_id: @application.id).where(number: message_params[:chat_number]).first     
       else
-        @chat = Chat.find_by(number: params[:chat_number])     
-
+        @application = Application.find_by(application_token: params[:application_token])
+        @chat = Chat.where(application_id: @application.id).where(number: params[:chat_number]).first    
       end
     end
 
@@ -61,8 +58,8 @@ class MessagesController < ApplicationController
               'job_type': 'message',
               'status': 'pending', 
               'job_args': {
-                'chat_id': @message.chat_id,
-                'body': @message.body,
+                'chat_id': @chat.id,
+                'body': message_params[:body],
               }
             }
           }
@@ -76,8 +73,8 @@ class MessagesController < ApplicationController
               'job_type': 'message',
               'status': 'pending', 
               'job_args': {
-                'chat_id': @message.chat_id,
-                'body': @message.body,
+                'chat_id': @chat.id,
+                'body': message_params[:body],
               }
             }
           }
@@ -85,6 +82,12 @@ class MessagesController < ApplicationController
         f.write(prev.to_json)
       end
       SavingRecordJob.perform_later
+      
+      
+      @message = {
+        message_number: @message.number,
+        message_body: message_params[:body] , 
+      }
     end
     # Use callbacks to share common setup or constraints between actions.
     def set_message
@@ -93,6 +96,6 @@ class MessagesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def message_params
-      params.require(:message).permit(:chat_number, :message_number, :body)
+      params.require(:message).permit(:chat_number, :message_number, :body, :application_token)
     end
 end

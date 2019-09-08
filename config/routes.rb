@@ -13,6 +13,14 @@ Rails.application.routes.draw do
       patch "application" , to: "applications#update"
       post "application" , to: "applications#create"
 
+
+      get "message",  to: "messages#show"
+      patch "message" , to: "messages#update"
+      post "message" , to: "messages#create"
+      get "messages" , to: "messages#index"
+      get "messages/search" , to: "messages#search"
+
+
     end
     
   end
