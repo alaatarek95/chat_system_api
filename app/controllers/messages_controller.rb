@@ -14,9 +14,7 @@ class MessagesController < ApplicationController
 
   # POST /messages
   def create
-    
-    binding.pry
-    
+        
     @message = Message.new(@chat)    
     save_to_file
   end

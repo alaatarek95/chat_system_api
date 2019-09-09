@@ -9,10 +9,7 @@ class Message < ApplicationRecord
 
     belongs_to :chat, class_name: "Chat", foreign_key: "chat_id"
 
-    def initialize(chat)
-        
-        binding.pry
-        
+    def initialize(chat)        
         current_chat = chat
         self.number = current_chat.messages_counter + 1  
         current_chat.messages_counter =  current_chat.messages_counter + 1  

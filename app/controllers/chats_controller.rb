@@ -15,8 +15,8 @@ class ChatsController < ApplicationController
 
   # POST /chats
   def create      
-    @chat = Chat.new
-    @chat.application_id = @application.id
+  
+    @chat = Chat.new(@application)
     save_to_file
   end
 
@@ -50,7 +50,7 @@ class ChatsController < ApplicationController
             'job_type': 'chat',
             'status': 'pending', 
             'job_args': {
-              'application_id': @chat.application_id,
+              'application_id': @application.id,
             }
           }
         }
@@ -63,7 +63,7 @@ class ChatsController < ApplicationController
             'job_type': 'chat',
             'status': 'pending', 
             'job_args': {
-              'application_id': @chat.application_id,
+              'application_id': @application.id,
             }
           }
         }
@@ -71,6 +71,9 @@ class ChatsController < ApplicationController
       f.write(prev.to_json)
     end
     SavingRecordJob.perform_later
+    @chat = {
+      chat_number: @chat.number
+    }
   end
     # Use callbacks to share common setup or constraints between actions.
     def set_chat
