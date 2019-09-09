@@ -33,11 +33,13 @@ services:
     ports:
       - "3001:3000"
     environment:
-      - RAILS_ENV=development
-      - DATABASE_HOST=mysql
-      - DATABASE_USER=root
-      - DATABASE_NAME=chat_system_development
-      - DATABASE_PORT=3306
+      DB_USERNAME: root
+      DB_PASSWORD: 
+      DB_DATABASE: chat_system_development
+      DB_PORT: 3306
+      DB_HOST: db
+      RAILS_ENV: development
+      RAILS_MAX_THREADS: 5
     volumes:
         - web-app:/chat_system_api
         # - "./config/docker/database.yml:/chat_system_api/config/database.yml"
@@ -48,6 +50,8 @@ services:
       - db
       - elasticsearch
       - redis
+    command:
+      - ./config/docker/startup.sh
 
 volumes:
   redis:
