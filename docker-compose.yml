@@ -1,0 +1,43 @@
+version: "2"
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "3307:3306"
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    hostname: elasticsearch
+    ports:
+      - "9201:9200"
+  redis:
+    image: "redis:4.0-alpine"
+    command: redis-server
+    volumes:
+      - "redis:/data"
+  app:
+    depends_on:
+      - db
+      - elasticsearch
+      - redis
+    build: .
+    # command: bin/rails server --port 3000 --binding 0.0.0.0
+    ports:
+      - "3000:3000"
+    environment:
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      DB_DATABASE: sample
+      DB_PORT: 3306
+      DB_HOST: db
+      RAILS_ENV: development
+      RAILS_MAX_THREADS: 5
+    volumes:
+        - ".:/chat_system_api"
+        # - "./config/docker/database.yml:/chat_system_api/config/database.yml"
+volumes:
+  redis:
+  db:
