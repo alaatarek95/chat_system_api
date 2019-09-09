@@ -40,7 +40,6 @@ services:
       DB_HOST: db
       RAILS_ENV: development
       RAILS_MAX_THREADS: 5
-      REDIS_URL= redis://cache
 
     volumes:
         - web-app:/chat_system_api
