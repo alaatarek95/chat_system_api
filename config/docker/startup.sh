@@ -1,4 +1,5 @@
 #! /bin/sh
+rm -f /chat_system_api/tmp/pids/server.pid
 
 # Wait for DB services
 sh ./config/docker/wait-for-services.sh
